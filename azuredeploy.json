@@ -257,7 +257,7 @@
 
         "VMCountInt": "[int(parameters('VMCount'))]",
         "nodeIndex": "[add(mod(add(sub(variables('VMCountInt'),2),sub(variables('VMCountInt'),1)),2),1)]",
-        "nodeVMUri": "[concat(variables('baseuri'), variables('nodeUriList')[variables('nodeIndex')], parameters('VMAuthType'), '.json')]",
+        "nodeVMUri": "[concat('https://raw.githubusercontent.com/vijayanand17/TemplatesBDE/master/', variables('nodeUriList')[variables('nodeIndex')], parameters('VMAuthType'), '.json')]",
 
         "InfaNodeNamePrefix": "node"
     },
