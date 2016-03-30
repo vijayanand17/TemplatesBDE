@@ -1,0 +1,463 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string"
+        },
+        "storageExistingOrNew": {
+            "type": "string",
+            "allowedValues": [
+                "existing",
+                "new"
+            ],
+            "defaultValue": "new",
+            "metadata": {
+                "description": "Storage new or existing"
+            }
+        },
+        "storageName": {
+            "type": "string",
+            "defaultValue": "infastorage",
+            "metadata": {
+                "description": "Storage name"
+            }
+        },
+        "storageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS"
+            ],
+            "metadata": {
+                "description": "Storage type"
+            }
+        },
+        "vnetExistingOrNew": {
+            "type": "string",
+            "allowedValues": [
+                "existing",
+                "new"
+            ],
+            "defaultValue": "new",
+            "metadata": {
+                "description": "VNET new or existing"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "infavnet",
+            "metadata": {
+                "description": "VNET name"
+            }
+        },
+        "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "VNET address prefix"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "defaultValue": "infasubnet",
+            "metadata": {
+                "description": "Subnet name"
+            }
+        },
+        "subnetPrefix": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Subnet address prefix"
+            }
+        },
+        "databaseType": {
+            "type": "string",
+            "allowedValues": [
+                "sqlserver",
+                "sqlserverazure"
+            ],
+            "defaultValue": "sqlserver",
+            "metadata": {
+                "description": "Database type. Only SQL Server 2014 on VM is supported for now"
+            }
+        },
+        "VM01Name": {
+            "type": "string",
+            "defaultValue": "DVM",
+            "metadata": {
+                "description": "Database VM name"
+            }
+        },
+        "VM01AdminUsername": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Database VM username"
+            }
+        },
+        "VM01AdminPassword": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Database VM password"
+            }
+        },
+        "DBVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D3",
+            "metadata": {
+                "description": "Database VM size"
+            }
+        },
+        "DBUser": {
+            "type": "string",
+            "defaultValue": "user1",
+            "metadata": {
+                "description": "Database user for Informatica domain"
+            }
+        },
+        "DBPassword": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Database user password for Informatica domain"
+            }
+        },
+        "NodeVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D11",
+            "metadata": {
+                "description": "Node VM size"
+            }
+        },
+        "VMAuthType": {
+            "type": "string",
+            "defaultValue": "password",
+            "metadata": {
+                "description": "Node VM authenication type"
+            }
+        },
+        "VMAdminUserName": {
+            "type": "string",
+            "minLength": 1,
+            "defaultValue": "azureuser",
+            "metadata": {
+                "description": "Node VM username"
+            }
+        },
+        "VMAdminPassword": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Node VM password"
+            }
+        },
+        "VMAdminSshPublicKey": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Node VM sshPublicKey"
+            }
+        },
+        "VMNamePrefix": {
+            "type": "string",
+            "minLength": 1,
+            "defaultValue": "NVM",
+            "metadata": {
+                "description": "Node VM name prefix"
+            }
+        },
+        "VMCount": {
+            "type": "string",
+            "defaultValue": "2",
+            "metadata": {
+                "description": "Node VM count"
+            }
+        },
+        "InfaDomainName": {
+            "type": "string",
+            "minLength": 4,
+            "defaultValue": "InfaAzureDomain",
+            "metadata": {
+                "description": "Informatica domain name"
+            }
+        },
+        "InfaDomainUser": {
+            "type": "string",
+            "minLength": 4,
+            "defaultValue": "Administrator",
+            "metadata": {
+                "description": "Informatica domain username"
+            }
+        },
+        "InfaDomainPassword": {
+            "type": "securestring",
+            "minLength": 4,
+            "defaultValue": "Administrator",
+            "metadata": {
+                "description": "Informatica domain password"
+            }
+        },
+        "InfaKeyWord": {
+            "type": "securestring",
+            "minLength": 4,
+            "defaultValue": "",
+            "metadata": {
+                "description": "Informatica domain encryption key keyphrase"
+			}
+        },
+        "HDIClusterName": {
+            "type": "string"
+        },
+        "HDIClusterLoginUsername": {
+            "type": "string"
+        },
+        "HDIClusterLoginPassword": {
+            "type": "securestring"
+        },
+        "HDIClusterSSHHostname": {
+            "type": "string"
+        },
+        "HDIClusterSSHUsername": {
+            "type": "string"
+        },
+        "HDIClusterSSHPassword": {
+            "type": "securestring"
+        },
+        "Clusterjobhistory": {
+            "type": "string"
+        },
+        "Clusterjobhistorywebapp": {
+            "type": "string"
+        },
+        "ClusterRMSaddress": {
+            "type": "string"
+        },
+        "ClusterRMWaddress": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "baseuri": "https://raw.githubusercontent.com/madanvkumarsjsu/INFABDMOffering1/master/ARMTemplates/",
+
+        "storageUri": "[concat(variables('baseuri'), 'storage', parameters('storageExistingOrNew'),'.json')]",
+        "vnetUri": "[concat(variables('baseuri'), 'vnet', parameters('vnetExistingOrNew'),'.json')]",
+        "databaseUri": "[concat(variables('baseuri'), parameters('databaseType'),'.json')]",
+
+        "VMOSType": "linux",
+        "nodeUriList": [
+            "nodelinux",
+            "nodelinux",
+            "nodemultilinux"
+        ],
+
+        "VMCountInt": "[int(parameters('VMCount'))]",
+        "nodeIndex": "[add(mod(add(sub(variables('VMCountInt'),2),sub(variables('VMCountInt'),1)),2),1)]",
+        "nodeVMUri": "[concat(variables('baseuri'), variables('nodeUriList')[variables('nodeIndex')], parameters('VMAuthType'), '.json')]",
+
+        "InfaNodeNamePrefix": "node"
+    },
+    "resources": [
+        {
+            "name": "storageSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('storageUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "storageName": {
+                        "value": "[parameters('storageName')]"
+                    },
+                    "storageType": {
+                        "value": "[parameters('storageType')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "vnetSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/storageSetup"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('vnetUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "vnetAddressPrefix": {
+                        "value": "[parameters('vnetAddressPrefix')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[parameters('subnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "databaseSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/storageSetup",
+                "Microsoft.Resources/deployments/vnetSetup"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('databaseUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "storageName": {
+                        "value": "[parameters('storageName')]"
+                    },
+                    "VM01Name": {
+                        "value": "[parameters('VM01Name')]"
+                    },
+                    "VM01AdminUsername": {
+                        "value": "[parameters('VM01AdminUsername')]"
+                    },
+                    "VM01AdminPassword": {
+                        "value": "[parameters('VM01AdminPassword')]"
+                    },
+                    "DBVMSize": {
+                        "value": "[parameters('DBVMSize')]"
+                    },
+                    "DBUser": {
+                        "value": "[parameters('DBUser')]"
+                    },
+                    "DBPassword": {
+                        "value": "[parameters('DBPassword')]"
+                    },
+                    "VNetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "SubnetName": {
+                        "value": "[parameters('subnetName')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "nodesSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/databaseSetup"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('nodeVMUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "storageName": {
+                        "value": "[parameters('storageName')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "VM01Name": {
+                        "value": "[parameters('VM01Name')]"
+                    },
+                    "DBUser": {
+                        "value": "[parameters('DBUser')]"
+                    },
+                    "DBPassword": {
+                        "value": "[parameters('DBPassword')]"
+                    },
+                    "NodeVMSize": {
+                        "value": "[parameters('NodeVMSize')]"
+                    },
+                    "VMOSType": {
+                        "value": "[variables('VMOSType')]"
+                    },
+                    "VMAdminUserName": {
+                        "value": "[parameters('VMAdminUserName')]"
+                    },
+                    "VMAdminPassword": {
+                        "value": "[parameters('VMAdminPassword')]"
+                    },
+                    "VMAdminSshPublicKey": {
+                        "value": "[parameters('VMAdminSshPublicKey')]"
+                    },
+                    "VMNamePrefix": {
+                        "value": "[parameters('VMNamePrefix')]"
+                    },
+                    "VMCount": {
+                        "value": "[variables('VMCountInt')]"
+                    },
+                    "InfaDomainName": {
+                        "value": "[parameters('InfaDomainName')]"
+                    },
+                    "InfaDomainUser": {
+                        "value": "[parameters('InfaDomainUser')]"
+                    },
+                    "InfaDomainPassword": {
+                        "value": "[parameters('InfaDomainPassword')]"
+                    },
+                    "InfaNodeNamePrefix": {
+                        "value": "[variables('InfaNodeNamePrefix')]"
+                    },
+                    "InfaKeyWord": {
+                        "value": "[parameters('InfaKeyWord')]"
+                    },
+                    "HDIClusterName": {
+                        "value": "[parameters('HDIClusterName')]"
+                    },
+                    "HDIClusterLoginUsername": {
+                        "value": "[parameters('HDIClusterLoginUsername')]"
+                    },
+                    "HDIClusterLoginPassword": {
+                         "value": "[parameters('HDIClusterLoginPassword')]"
+                    },
+                    "HDIClusterSSHHostname": {
+                         "value": "[parameters('HDIClusterSSHHostname')]"
+                    },
+                    "HDIClusterSSHUsername": {
+                        "value": "[parameters('HDIClusterSSHUsername')]"
+                    },
+                    "HDIClusterSSHPassword": {
+                         "value": "[parameters('HDIClusterSSHPassword')]"
+                    },
+                    "Clusterjobhistory": {
+                         "value": "[parameters('Clusterjobhistory')]"
+                    },
+                    "Clusterjobhistorywebapp": {
+                        "value": "[parameters('Clusterjobhistorywebapp')]"
+                    },
+                    "ClusterRMSaddress": {
+                        "value": "[parameters('ClusterRMSaddress')]"
+                    },
+                    "ClusterRMWaddress": { 
+                         "value": "[parameters('ClusterRMWaddress')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
